@@ -4,27 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maycom Onofre | Deploy da Formatura</title>
+
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --bg-dark: #050505;
             --panel-bg: #111113;
-            --accent-color: #00ff41; 
+            --accent-color: #00ff41;
             --text-gray: #b0b0b0;
             --border-color: #333;
             --terminal-glow: rgba(0, 255, 65, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             background-color: var(--bg-dark);
             color: #fff;
             font-family: 'JetBrains Mono', monospace;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 30px 20px;
         }
 
         .dashboard {
@@ -33,6 +37,7 @@
             gap: 30px;
             width: 100%;
             max-width: 1200px;
+            margin: auto;
             animation: fadeIn 1.2s ease-out;
         }
 
@@ -63,14 +68,37 @@
             box-shadow: 0 0 20px var(--terminal-glow);
         }
 
-        .profile-card h2 { font-size: 1.6rem; color: var(--accent-color); margin-bottom: 10px; }
-        .profile-card p { font-size: 1.05rem; line-height: 1.7; text-align: justify; color: var(--text-gray); }
+        .badge {
+            background: rgba(0, 255, 65, 0.1);
+            color: var(--accent-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid var(--accent-color);
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .profile-card h2 {
+            font-size: 1.6rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .profile-card p {
+            font-size: 1rem;
+            line-height: 1.8;
+            text-align: justify;
+            color: var(--text-gray);
+        }
 
         .terminal {
             background: #000;
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px var(--terminal-glow);
+            box-shadow:
+                0 10px 40px rgba(0,0,0,0.8),
+                0 0 20px var(--terminal-glow);
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -85,15 +113,20 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .terminal-content { padding: 35px; font-size: 18px; line-height: 1.8; }
+        .terminal-content {
+            padding: 35px;
+            font-size: 18px;
+            line-height: 1.8;
+        }
 
-        .json-block { 
-            color: #98c379; 
-            margin: 25px 0; 
-            font-size: 19px; 
-            white-space: pre-wrap; 
+        .json-block {
+            color: #98c379;
+            margin: 25px 0;
+            font-size: 18px;
+            white-space: pre-wrap;
             display: none;
             font-weight: 500;
+            overflow-x: auto;
         }
 
         .comment-line {
@@ -107,30 +140,44 @@
         .photos-section {
             margin-top: 40px;
             border-top: 1px dashed var(--border-color);
-            padding-top: 20px;
+            padding-top: 25px;
             display: none;
+        }
+
+        .photos-section h3 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            text-transform: uppercase;
         }
 
         .memories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
         }
 
         .photo-frame {
             border: 1px solid var(--border-color);
-            padding: 10px;
+            padding: 8px;
             background: #111;
-            height: 250px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: 0.3s;
         }
 
-        .photo-frame img { 
-            max-width: 100%; 
-            max-height: 100%; 
-            object-fit: contain; 
+        .photo-frame:hover {
+            transform: scale(1.02);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px var(--terminal-glow);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
         }
 
         .btn-confirm {
@@ -155,69 +202,199 @@
             box-shadow: 0 0 30px var(--accent-color);
         }
 
-        .cursor { display: inline-block; width: 10px; height: 18px; background: var(--accent-color); animation: blink 1s infinite; }
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: var(--accent-color);
+            animation: blink 1s infinite;
+        }
 
-        @keyframes blink { 50% { opacity: 0; } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* RESPONSIVO */
 
         @media (max-width: 900px) {
-            .dashboard { grid-template-columns: 1fr; }
-            .profile-card { position: relative; top: 0; }
+
+            body {
+                padding: 15px;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .profile-card {
+                position: relative;
+                top: 0;
+                padding: 25px 20px;
+            }
+
+            .terminal-content {
+                padding: 20px;
+                font-size: 15px;
+            }
+
+            .json-block {
+                font-size: 14px;
+            }
+
+            .comment-line {
+                font-size: 14px;
+            }
+
+            .img-container {
+                width: 140px;
+                height: 140px;
+            }
+
+            .btn-confirm {
+                width: 100%;
+                box-sizing: border-box;
+                font-size: 14px;
+                padding: 16px;
+            }
+
+            .memories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .photo-frame img {
+                max-height: 450px;
+            }
         }
+
     </style>
 </head>
+
 <body>
 
     <div class="dashboard">
+
         <aside class="profile-card">
+
             <div class="img-container">
                 <img src="FOTO_MAYCOM.jpeg" alt="Maycom Onofre" class="profile-img">
             </div>
-            <span style="background: rgba(0, 255, 65, 0.1); color: var(--accent-color); padding: 5px 15px; border-radius: 20px; font-size: 0.75rem; border: 1px solid var(--accent-color); display: inline-block; margin-bottom: 15px;">ANALISTA & DEV DE SISTEMAS</span>
+
+            <span class="badge">
+                ANALISTA & DEV DE SISTEMAS
+            </span>
+
             <h2>Maycom Onofre</h2>
+
             <p>
-                Apaixonado por tecnologia e pela arte de resolver problemas. Após 3 anos de código, café e muito suor na <strong>FATEC</strong>, o deploy final chegou! 
+                Apaixonado por tecnologia e pela arte de resolver problemas.
+                Após 3 anos de código, café e muito suor na FATEC,
+                o deploy final chegou!
+
                 <br><br>
-                Gostaria muito da presença de todos para marcar essa fase tão importante. E já aviso: <strong>espero vocês para encher a cara comigo</strong>, porque esses 3 anos de estudos foram suados e agora o sistema vai rodar no modo festa!
+
+                Gostaria muito da presença de todos para marcar essa fase tão importante.
+                E já aviso:
+                <strong>espero vocês para encher a cara comigo</strong>,
+                porque esses 3 anos de estudos foram suados e agora
+                o sistema vai rodar no modo festa!
             </p>
+
         </aside>
 
         <main class="terminal">
+
             <div class="terminal-header">
+
                 <div style="display:flex; gap:6px">
                     <div style="width:12px; height:12px; border-radius:50%; background:#ff5f56"></div>
                     <div style="width:12px; height:12px; border-radius:50%; background:#ffbd2e"></div>
                     <div style="width:12px; height:12px; border-radius:50%; background:#27c93f"></div>
                 </div>
-                <span style="color: #666; font-size: 13px; margin-left: 10px;">root@maycom:~/formatura_vFinal</span>
+
+                <span style="color: #666; font-size: 13px; margin-left: 10px;">
+                    root@maycom:~/formatura_vFinal
+                </span>
+
             </div>
-            
+
             <div class="terminal-content" id="output"></div>
-            
+
             <div class="terminal-content" style="padding-top: 0;">
-                <a href="https://wa.me/5514998523664?text=Presença confirmada! Já avisa o garçom que o 'inimigo do fim' está chegando.." class="btn-confirm" id="confirmBtn">
+
+                <a
+                    href="https://wa.me/5514998523664?text=Presença confirmada! Já avisa o garçom que o inimigo do fim está chegando."
+                    class="btn-confirm"
+                    id="confirmBtn"
+                >
                     PARTIU! O ÚLTIMO QUE SAIR APAGA A LUZ.
                 </a>
 
                 <div class="photos-section" id="photoGallery">
-                    <h3 style="color: var(--accent-color); text-transform: uppercase;">./memorias_do_sistema</h3>
+
+                    <h3>./memorias_do_sistema</h3>
+
                     <div class="memories-grid">
-                        <div class="photo-frame"><img src="FOTO_MAYCOM.jpeg" alt="Foto 1"></div>
-                        <div class="photo-frame"><img src="FOTO_PROGRAMANDO1.jpeg" alt="Foto 2"></div>
-                        <div class="photo-frame"><img src="FOTO_CAIO.jpeg" alt="Foto 3"></div>
-                        <div class="photo-frame"><img src="FOTO_CAIODANI.jpeg" alt="Foto 4"></div>
-                        <div class="photo-frame"><img src="FOTO_GRUPO.jpeg" alt="Foto 5"></div>
-                        <div class="photo-frame"><img src="FOTO_CACHORROQUENTE.jpeg" alt="Foto 6"></div>
-                        <div class="photo-frame"><img src="FOTO_PAULO_ALURA.jpeg" alt="Foto 7"></div>
-                        <div class="photo-frame"><img src="FOTO_CODECON.jpeg" alt="Foto 8"></div>
+
+                        <div class="photo-frame">
+                            <img src="FOTO_MAYCOM.jpeg" alt="Foto 1">
+                        </div>
+
+                        <div class="photo-frame">
+                            <img src="FOTO_PROGRAMANDO1.jpeg" alt="Foto 2">
+                        </div>
+
+                        <div class="photo-frame">
+                            <img src="FOTO_CAIO.jpeg" alt="Foto 3">
+                        </div>
+
+                        <div class="photo-frame">
+                            <img src="FOTO_CAIODANI.jpeg" alt="Foto 4">
+                        </div>
+
+                        <div class="photo-frame">
+                            <img src="FOTO_GRUPO.jpeg" alt="Foto 5">
+                        </div>
+
+                        <div class="photo-frame">
+                            <img src="FOTO_CACHORROQUENTE.jpeg" alt="Foto 6">
+                        </div>
+
+                        <div class="photo-frame">
+                            <img src="FOTO_PAULO_ALURA.jpeg" alt="Foto 7">
+                        </div>
+
+                        <div class="photo-frame">
+                            <img src="FOTO_CODECON.jpeg" alt="Foto 8">
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </main>
+
     </div>
 
     <script>
+
         const output = document.getElementById('output');
+
         const lines = [
             { t: "git push origin graduation --force", isCommand: true, delay: 500 },
             { t: "> Verificando esforço acumulado: 100% [SUADO PRA CARAMBA]", delay: 500 },
@@ -240,25 +417,38 @@
 }`;
 
         async function init() {
+
             for (let line of lines) {
+
                 let p = document.createElement('div');
+
                 p.style.marginBottom = "10px";
-                if (line.isCommand) p.innerHTML = `<span style="color: var(--accent-color)">maycom@fatec:~$ </span>`;
+
+                if (line.isCommand) {
+                    p.innerHTML = `<span style="color: var(--accent-color)">maycom@fatec:~$ </span>`;
+                }
+
                 output.appendChild(p);
+
                 await typeText(p, line.t, line.isCommand);
+
                 await new Promise(r => setTimeout(r, line.delay));
             }
 
             const pre = document.createElement('pre');
+
             pre.className = 'json-block';
             pre.style.display = 'block';
             pre.textContent = jsonInvite;
+
             output.appendChild(pre);
 
             const comment = document.createElement('div');
+
             comment.className = 'comment-line';
             comment.style.display = 'block';
             comment.textContent = "// 3 anos de FATEC merecem uma comemoração sem bugs!";
+
             output.appendChild(comment);
 
             document.getElementById('confirmBtn').style.display = 'inline-block';
@@ -266,25 +456,49 @@
         }
 
         function typeText(el, text, isCommand) {
+
             return new Promise(resolve => {
+
                 let i = 0;
+
                 let interval = setInterval(() => {
+
                     let cursor = '<span class="cursor"></span>';
+
                     if (isCommand) {
-                        el.innerHTML = `<span style="color: var(--accent-color)">maycom@fatec:~$ </span>${text.substring(0, i)}${cursor}`;
+
+                        el.innerHTML =
+                            `<span style="color: var(--accent-color)">maycom@fatec:~$ </span>` +
+                            text.substring(0, i) +
+                            cursor;
+
                     } else {
-                        el.innerHTML = text.substring(0, i) + cursor;
+
+                        el.innerHTML =
+                            text.substring(0, i) +
+                            cursor;
                     }
+
                     i++;
+
                     if (i > text.length) {
+
                         clearInterval(interval);
+
                         el.querySelector('.cursor')?.remove();
+
                         resolve();
                     }
+
                 }, 30);
+
             });
+
         }
+
         init();
+
     </script>
+
 </body>
 </html>
